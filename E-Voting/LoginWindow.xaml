@@ -1,0 +1,58 @@
+﻿<Window x:Class="E_Voting.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:E_Voting"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="800" Width="1400" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="15*"/>
+        </Grid.RowDefinitions>
+        <Border Background="#33800000">
+            <TextBlock Text="Unilag E-Voting Terminal" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="24" Foreground="White" FontFamily="Yu Gothic UI Light"/>
+        </Border>
+        <Image Grid.Row="1" Source="Media/background.jpg" Stretch="UniformToFill"/>
+        <Grid Grid.Row="1">
+            <Label Name="LoginStatus" HorizontalAlignment="Center" VerticalAlignment="Top"></Label>
+            <Border Name="DetailsBorder"  HorizontalAlignment="Left" Padding="20,50" Background="#CCFFFFE1" CornerRadius="5" Margin="40">
+                <Grid Margin="0" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="Username" VerticalAlignment="Top" Padding="0,3,20,0" Foreground="Black" FontFamily="Microsoft YaHei Light" FontSize="18" />
+                    <StackPanel Grid.Column="1" Width="250">
+                        <TextBox  Name="UsernameText" Width="250" VerticalAlignment="Center" Padding="4" Style="{StaticResource SimpleTextBox}"/>
+                        <Label Name="UsernameError"/>
+                    </StackPanel>
+                    <Label Content="Password" Grid.Row="1" VerticalAlignment="Top" Padding="0" Foreground="Black" FontFamily="Microsoft YaHei Light" FontSize="18"/>
+                    <StackPanel Grid.Row="1" Grid.Column="1">
+                        <PasswordBox Name="PasswordText" VerticalAlignment="Center" Padding="4" Style="{StaticResource SimplePasswordBox}"/>
+                        <Label Name="PasswordError"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" FlowDirection="RightToLeft">
+                        <Button Name="LoginButton" Content="Login" Padding="25,10" VerticalAlignment="Center" Click="LoginButton_Click"/>
+                        <Button Name="CancelButton" Content="Close" Padding="25,10" Margin="20,0,0,0" VerticalAlignment="Center" Click="CancelButton_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <Border Margin="40" HorizontalAlignment="Right" CornerRadius="5" Background="#CCFFFFE1" Width="{Binding ActualWidth, ElementName=DetailsBorder, Mode=OneWay}">
+                <Grid>
+                    <TextBlock Text="Voting Guidelines" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="Microsoft YaHei UI" FontSize="18"/>
+                    <TextBlock Text="- Make sure the banner close to your name flashes yellow and displays the text 'Anonymous connection established' before voting to ensure a closed ballot system." TextWrapping="Wrap" Margin="50,86,50,0" VerticalAlignment="Top" FontSize="14" FontFamily="Microsoft YaHei Light" TextAlignment="Center"/>
+                    <TextBlock Text="- Logging out or loss of power will terminate your voting session." TextWrapping="Wrap" Margin="50,189,50,0" VerticalAlignment="Top" FontSize="14" FontFamily="Microsoft YaHei Light" TextAlignment="Center"/>
+                    <TextBlock Text="- Memorize, Snap or write down the private key displayed at the top bar if you would like to verify your vote after the election." TextWrapping="Wrap" Margin="50,300,50,0" VerticalAlignment="Top" FontSize="14" FontFamily="Microsoft YaHei Light" TextAlignment="Center"/>
+
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
