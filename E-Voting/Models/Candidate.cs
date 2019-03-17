@@ -13,6 +13,7 @@ namespace E_Voting.Models
         private Int64 id;
         private string imageUri;
         private bool selected;
+        private bool voted;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -20,11 +21,13 @@ namespace E_Voting.Models
         public Int64 UniqueId { get { return id; } set { id = value; } }
         public string ImageUri { get { return imageUri; } set { imageUri = value; } }
         public bool Selected { get { return selected; } set { selected = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Selected")); } }
+        public bool Voted { get { return voted; } set { voted = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Voted")); } }
         public int CatId { get; set; }
 
         public Candidate()
         {
-
+            Selected = false;
+            Voted = false;
         }
 
         public Candidate(string name, Int64 id)
@@ -32,6 +35,7 @@ namespace E_Voting.Models
             candidateName = name;
             this.id = id;
             Selected = false;
+            Voted = false;
         }
 
     }

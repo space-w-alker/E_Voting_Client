@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E_Voting"
+        xmlns:views="clr-namespace:E_Voting.Views"
         mc:Ignorable="d"
         Title="MainWindow" Height="800" Width="1200" WindowState="Maximized" AllowsTransparency="True" WindowStyle="None">
     <Window.Resources>
@@ -32,14 +33,19 @@
             </Border>
         </DataTemplate>
         <DataTemplate x:Key="CandidateTemplate">
-            <Border SnapsToDevicePixels="True" Background="#CCFFFFE1" CornerRadius="5">
+            <Border Name="CTBorder" SnapsToDevicePixels="True" Background="#CCFFFFE1" CornerRadius="5">
                 <Grid Background="#00000000">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="8*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Source="{StaticResource AvatarImage}" Height="50" Width="auto" Margin="5"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Name="IdBanner" Background="Maroon" Padding="5" CornerRadius="5,0,0,5">
+                            <TextBlock Text="{Binding UniqueId, StringFormat='0000'}" Foreground="White" FontSize="16" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </Border>
+                        <Image Source="{StaticResource AvatarImage}" Height="50" Width="auto" Margin="5"/>
+                    </StackPanel>
                     <TextBlock Grid.Column="1" Text="{Binding CandidateName}" Foreground="Black" VerticalAlignment="Center" FontWeight="Bold" FontSize="18" FontFamily="Microsoft YaHei Light"/>
                     <Button Name="SelectCandidate" Grid.Column="2" Content="Select" Margin="5" Tag="{Binding UniqueId}" Click="SelectCandidate_Click" BorderThickness="0"/>
                 </Grid>
@@ -53,18 +59,28 @@
                     <Setter Property="IsEnabled" Value="True" TargetName="SelectCandidate"/>
                     <Setter Property="Content" Value="Select" TargetName="SelectCandidate"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding Voted}" Value="true">
+                    <Setter Property="Background" Value="#FF8AFF8A" TargetName="IdBanner"/>
+                    <Setter Property="Content" Value="Voted" TargetName="SelectCandidate"/>
+                    <Setter Property="Background" Value="#FFD8FFB7" TargetName="CTBorder"/>
+                </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
         <DataTemplate x:Key="VoteForTemplate">
-            <Border Background="#CCFFFFE1">
+            <Border Background="#CCFFFFE1" CornerRadius="5">
                 <Grid >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="8*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Source="{StaticResource AvatarImage}" Height="50" Width="auto" Margin="5"/>
-                    <TextBlock Grid.Column="1" Text="{Binding CandidateName}" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="18" FontFamily="Microsoft YaHei Light"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="Maroon" Padding="5" CornerRadius="5,0,0,5">
+                            <TextBlock Text="{Binding UniqueId, StringFormat='0000'}" Foreground="White" FontSize="16" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </Border>
+                        <Image Source="{StaticResource AvatarImage}" Height="50" Width="auto" Margin="5"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding CandidateName}" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Left" FontWeight="Bold" FontSize="18" FontFamily="Microsoft YaHei Light"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="5">
                         <Button Name="RemoveSelected" Content="Remove" Tag="{Binding UniqueId}" Padding="20,1" Click="RemoveSelected_Click" Margin="0,0,4,0" BorderThickness="0"/>
                         <Button Name="VoteSelected" Content="Vote" Tag="{Binding UniqueId}" Padding="20,1" Click="VoteSelected_Click" BorderThickness="0"/>
@@ -76,7 +92,7 @@
 
 
 
-    <Grid Background="#FFFFFFE1">
+    <Grid Background="#FFFFFFE1" Margin="0,0,5,0">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -89,7 +105,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="Unilag E-Voting Terminal" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei UI"/>
+                <TextBlock Text="Unilag E-Voting Terminal" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" FontSize="18" Foreground="Black" FontFamily="Microsoft YaHei UI" Margin="0,10,0,0"/>
                 <TextBlock Name="PrivateKeyText" Text="Private Key:dfkajldfkjaldkjflakjdflkajdlfk=" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="420,67,125,0" FontSize="16" FontFamily="Arial Black" FontStretch="ExtraExpanded" Foreground="#FFA0A0A0"/>
                 <Border Grid.Column="2" BorderBrush="White" BorderThickness="1" Margin="10" CornerRadius="5" ClipToBounds="True" SnapsToDevicePixels="True" Padding="5">
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -107,17 +123,21 @@
                     <ColumnDefinition Width="10*"/>
                     <ColumnDefinition Width="10*"/>
                 </Grid.ColumnDefinitions>
-                <ListBox Name="CategoryList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemTemplate="{StaticResource CategoryTemplate}" Background="#7F800000" BorderThickness="0" ItemContainerStyle="{StaticResource SimpleListBoxItem}" Style="{StaticResource SimpleListBox}" BorderBrush="{x:Null}">
-
-                </ListBox>
-                <ListBox Name="CandidateList" Grid.Column="1" ItemTemplate="{StaticResource CandidateTemplate}" HorizontalContentAlignment="Stretch" Background="#FFDADADA" BorderThickness="0">
-
-                </ListBox>
-                <ListBox Name="VoteForList" Grid.Column="2" ItemTemplate="{StaticResource VoteForTemplate}" HorizontalContentAlignment="Stretch" Background="#FFE4E4E4" BorderThickness="0">
-
-                </ListBox>
+                <ListBox Name="CategoryList" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" ItemTemplate="{StaticResource CategoryTemplate}" Background="#7F800000" BorderThickness="0" ItemContainerStyle="{StaticResource SimpleListBoxItem}" Style="{StaticResource SimpleListBox}" BorderBrush="{x:Null}"/>
+                
+                <StackPanel Grid.Column="1"  Background="#FFF3F3F3">
+                    <views:IconTextBox Height="30" Margin="5" x:Name="SearchCandidates"/>
+                    <ListBox Name="CandidateList" Grid.Column="1" ItemTemplate="{StaticResource CandidateTemplate}" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="Transparent"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Background="White">
+                    <views:IconTextBox Height="30" Margin="5" x:Name="SearchVoteFor"/>
+                    <ListBox Name="VoteForList" Grid.Column="2" ItemTemplate="{StaticResource VoteForTemplate}" HorizontalContentAlignment="Stretch" BorderThickness="0" Background="Transparent"/>
+                </StackPanel>
             </Grid>
         </Grid>
         <Label x:Name="label" HorizontalAlignment="Center"  VerticalAlignment="Center"/>
+        <Border Name="MainWindowStatusBorder" Background="Black" VerticalAlignment="Bottom" Padding="30,15" Margin="0,0,0,50" HorizontalAlignment="Center" CornerRadius="20" Visibility="Collapsed">
+            <TextBlock Name="MainWindowStatus" Text="This is Main Window" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+        </Border>
     </Grid>
 </Window>

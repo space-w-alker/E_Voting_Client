@@ -35,7 +35,7 @@ namespace E_Voting.Models
             httpClient = new HttpClient();
             active_users = new List<string>();
             new Random().NextBytes(ClientPrivateKey);
-            ServerLocation = "196.220.240.111";
+            ServerLocation = "127.0.0.1";
             ServerPort = 13002;
             AppPort = 13001;
         }

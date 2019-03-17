@@ -34,6 +34,7 @@ namespace E_Voting
         public ObservableCollection<Candidate> Candidates { get; set; }
         public ObservableCollection<Candidate> VoteFor { get; set; }
         private TcpListener ClientServer { get; set; }
+        private List<CancellationTokenSource> cancellationTokenSources;
 
         public enum States { INIT, NONE, CONNECTED }
         private States state;
@@ -75,9 +76,56 @@ namespace E_Voting
             VoteForList.DataContext = VoteFor;
             VoteForList.ItemsSource = VoteFor;
             UsernameText.Text = TheClient.Username;
+            SearchCandidates.SearchBox.SelectionChanged += SearchBox_SelectionChanged;
+            SearchVoteFor.SearchBox.SelectionChanged += SearchBox_SelectionChanged1;
             string keyString = new System.Numerics.BigInteger(TheClient.ClientPrivateKey).ToString();
             PrivateKeyText.Text = String.Format("Private Key:   {0}", keyString);
+            cancellationTokenSources = new List<CancellationTokenSource>();
             
+        }
+
+        private void SearchBox_SelectionChanged1(object sender, RoutedEventArgs e)
+        {
+            var view = CollectionViewSource.GetDefaultView(VoteForList.DataContext);
+            string search_text = "";
+            if (string.IsNullOrWhiteSpace(SearchVoteFor.SearchBox.Text)) view.Filter = null;
+            else
+            {
+                search_text = SearchVoteFor.SearchBox.Text;
+                view.Filter = candidate =>
+                {
+                    long long_search_text;
+                    bool output = ((Candidate)candidate).CandidateName.IndexOf(search_text, StringComparison.InvariantCultureIgnoreCase) > -1;
+                    if (output) return output;
+                    if (Int64.TryParse(search_text, out long_search_text))
+                    {
+                        output = ((Candidate)candidate).UniqueId == long_search_text;
+                    }
+                    return output;
+                };
+            }
+        }
+
+        private void SearchBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var view = CollectionViewSource.GetDefaultView(CandidateList.DataContext);
+            string search_text = "";
+            if (string.IsNullOrWhiteSpace(SearchCandidates.SearchBox.Text)) view.Filter = null;
+            else
+            {
+                search_text = SearchCandidates.SearchBox.Text;
+                view.Filter = candidate =>
+                {
+                    long long_search_text;
+                    bool output = ((Candidate)candidate).CandidateName.IndexOf(search_text, StringComparison.InvariantCultureIgnoreCase) > -1;
+                    if (output) return output;
+                    if(Int64.TryParse(search_text,out long_search_text))
+                    {
+                        output = ((Candidate)candidate).UniqueId == long_search_text;
+                    }
+                    return output;
+                };
+            }
         }
 
         private void TheClient_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -111,7 +159,18 @@ namespace E_Voting
         }
 
 
-
+        public async void NotifyStatus(string Message, string Color, CancellationToken cancellation)
+        {
+            MainWindowStatus.Text = Message;
+            MainWindowStatusBorder.Visibility = Visibility.Visible;
+            MainWindowStatusBorder.Background = new BrushConverter().ConvertFromString(Color) as Brush;
+            await Task.Run(() => Thread.Sleep(5000));
+            if (!cancellation.IsCancellationRequested)
+            {
+                MainWindowStatusBorder.Visibility = Visibility.Collapsed;
+            }
+            cancellationTokenSources.RemoveAt(0);
+        }
         
 
 
@@ -171,6 +230,14 @@ namespace E_Voting
                 {
                     VoteFor.Remove(candidate);
                     TheClient.Vote(candidate);
+                    candidate.Voted = true;
+                    CancellationTokenSource c = new CancellationTokenSource();
+                    if(cancellationTokenSources.Count > 0)
+                    {
+                        cancellationTokenSources[cancellationTokenSources.Count - 1].Cancel();
+                    }
+                    cancellationTokenSources.Add(c);
+                    NotifyStatus(String.Format("Vote Sent For {0}", candidate.CandidateName), "#FF8AFF8A", c.Token);
                     return;
                 }
             }

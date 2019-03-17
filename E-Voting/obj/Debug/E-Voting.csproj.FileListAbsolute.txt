@@ -30,3 +30,6 @@ C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\Styles\MainStyle.baml
 C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\App.baml
 C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\LandingWindow.g.cs
 C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\LandingWindow.baml
+C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\Views\IconTextBox.g.cs
+C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\AA\source\repos\E-Voting\E-Voting\obj\Debug\Views\IconTextBox.baml
